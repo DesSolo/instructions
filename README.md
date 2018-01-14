@@ -1,8 +1,9 @@
 # plex fix
-<br>wget https://raw.githubusercontent.com/DesSolo/plex/master/PycharmProjects/plex_fix/fix.py</br>
-<br>chmod +x fix.py</br>
-<br>./fix.py</br>
-
+```bash
+wget https://raw.githubusercontent.com/DesSolo/plex/master/PycharmProjects/plex_fix/fix.py
+chmod +x fix.py
+./fix.py
+```
 # plex ports firewall
 ```bash
 vim /usr/lib/firewalld/services/plexmediaserver.xml
