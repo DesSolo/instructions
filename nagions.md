@@ -35,6 +35,40 @@ define command{
         command_line    $USER1$/check_ping -4 -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
         }
 ```
+# Example cfg server
+
+```bash
+vim /etc/nagios/objects/google.cfg
+```
+
+```xml
+define host{
+        use                     linux-server
+        host_name               google.com
+        alias                   google.com
+        address                 www.google.com
+        }
+        
+define service{
+        use                             generic-service         ; Name of service template to use
+        host_name                       google.com
+        service_description             PING
+        check_command                   check_ping!100.0,20%!500.0,60%
+        }
+
+define service{
+        use                             generic-service         ; Name of service template to use
+        host_name                       google.com
+        service_description             HTTP
+        check_command                   check_http
+        notifications_enabled           0
+        }
+```
+```bash
+vim /etc/nagios/nagios.cfg 
+```
+
+>cfg_file=/etc/nagios/objects/google.cfg<br/>
 
 # Telegramm
 https://github.com/dariomas/nagios_telegram/wiki/Nagios-notifications-via-Telegram
@@ -71,7 +105,7 @@ vim /etc/nagios/objects/contacts.cfg
 ```
 ```xml
 define contact{
-        contact_name dessolo
+        contact_name telegramm
         service_notification_period 24x7
         host_notification_period 24x7
         service_notification_options w,u,c,r,f
@@ -79,5 +113,10 @@ define contact{
         service_notification_commands   notify-service-by-telegram
         host_notification_commands notify-host-by-telegram
         }
+define contactgroup{
+        contactgroup_name       admins
+        alias                   Nagios Administrators
+        members                 telegramm
+
 ```
 
