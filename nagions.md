@@ -1,8 +1,8 @@
 # Nagios
 ```bash
-rpm -Uvh https://repo.nagios.com/nagios/7/nagios-repo-7-2.el7.noarch.rpm
+yum install epel-release -y
 yum install nagios -y
-yum install nagion-plugins-all -y
+yum install nagios-plugins-all -y
 systemctl enable httpd.service
 systemctl start httpd.service
 systemctl enable nagios.service
@@ -12,10 +12,16 @@ firewall-cmd --reload
 ```
 
 reset password
-
+```bash
 htpasswd -c /etc/nagios/passwd nagiosadmin
+```
+disable selinux
+```bash
+vim /etc/selinex/config
+```
+>SELINUX=disabled<br/>
 
->http://ip/nagios<br/>
+>http://ip_address/nagios<br/>
 
 disable ip v6
 ```bash
@@ -33,8 +39,34 @@ define command{
 # Telegramm
 https://github.com/dariomas/nagios_telegram/wiki/Nagios-notifications-via-Telegram
 ```bash
+cd /usr/local/bin
+wget https://raw.githubusercontent.com/dariomas/nagios_telegram/master/nagios_telegram.py
+chmod 755 /usr/local/bin/nagios_telegram.py
 yum install python2-pip -y
 pip2.7 install requests pyopenssl urllib3
+vim /etc/nagios/objects/commands.cfg
+```
+
+```xml
+# commands to send host/service notifications
+define command {
+  command_name     notify-host-by-telegram
+  command_line     /usr/local/bin/nagios_telegram.py --token $USER4$ --object_type host --contact $USER3$ --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$HOSTOUTPUT$"
+}
+define command {
+  command_name     notify-service-by-telegram
+  command_line     /usr/local/bin/nagios_telegram.py --token $USER4$ --object_type service --contact $USER3$ --notificationtype "$NOTIFICATIONTYPE$" --servicestate "$SERVICESTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$SERVICEOUTPUT$" --servicedesc "$SERVICEDESC$" --servicename "$SERVICENAME$"
+}
+```
+
+```bash
+vim /etc/nagios/private/resource.cfg
+```
+```xml
+$USER3$=-135790246
+$USER4$=123456789:ABCdEFGHIjKLMNoPQRSTUVWXYZ1q2w3e4R5t
+```
+```bash
 vim /etc/nagios/objects/contacts.cfg
 ```
 ```xml
