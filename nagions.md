@@ -47,6 +47,7 @@ define host{
         host_name               google.com
         alias                   google.com
         address                 www.google.com
+        notification_period     24x7
         }
         
 define service{
@@ -73,50 +74,42 @@ vim /etc/nagios/nagios.cfg
 # Telegramm
 https://github.com/dariomas/nagios_telegram/wiki/Nagios-notifications-via-Telegram
 ```bash
-cd /usr/local/bin
-wget https://raw.githubusercontent.com/dariomas/nagios_telegram/master/nagios_telegram.py
+wget -O /usr/local/bin/nagios_telegram.py https://raw.githubusercontent.com/DesSolo/plex/master/nagios_telegram.py
 chmod 755 /usr/local/bin/nagios_telegram.py
 yum install python2-pip -y
-pip2.7 install requests pyopenssl urllib3
+pip2.7 install twx
 vim /etc/nagios/objects/commands.cfg
 ```
-
 ```xml
 # commands to send host/service notifications
 define command {
-  command_name     notify-host-by-telegram
-  command_line     /usr/local/bin/nagios_telegram.py --token $USER4$ --object_type host --contact $USER3$ --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$HOSTOUTPUT$"
+        command_name     notify-host-by-telegram
+        command_line     /usr/local/bin/nagios_telegram.py --token TOKEN --object_type host --contact "$CONTACTPAGER$" --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$HOSTOUTPUT$"
 }
-define command {
-  command_name     notify-service-by-telegram
-  command_line     /usr/local/bin/nagios_telegram.py --token $USER4$ --object_type service --contact $USER3$ --notificationtype "$NOTIFICATIONTYPE$" --servicestate "$SERVICESTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$SERVICEOUTPUT$" --servicedesc "$SERVICEDESC$" --servicename "$SERVICENAME$"
-}
-```
 
-```bash
-vim /etc/nagios/private/resource.cfg
-```
-```xml
-$USER3$=-135790246
-$USER4$=123456789:ABCdEFGHIjKLMNoPQRSTUVWXYZ1q2w3e4R5t
+define command {
+        command_name     notify-service-by-telegram
+        command_line     /usr/local/bin/nagios_telegram.py --token TOKEN --object_type service --contact "$CONTACTPAGER$" --notificationtype "$NOTIFICATIONTYPE$" --servicestate "$SERVICESTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$SERVICEOUTPUT$" --servicedesc "$SERVICEDESC$" --servicename "$SERVICENAME$"
+}
 ```
 ```bash
 vim /etc/nagios/objects/contacts.cfg
 ```
 ```xml
 define contact{
-        contact_name telegramm
-        service_notification_period 24x7
-        host_notification_period 24x7
-        service_notification_options w,u,c,r,f
-        host_notification_options d,u,r,f
-        service_notification_commands   notify-service-by-telegram
-        host_notification_commands notify-host-by-telegram
+        contact_name                    Telegram Group Chat
+        pager                           -228700585                      ; The name of this contact template
+        service_notification_period     24x7                            ; service notifications can be sent anytime
+        host_notification_period        24x7                            ; host notifications can be sent anytime
+        service_notification_options    w,u,c,r,f,s                     ; send notifications for all service states, flapping events, and scheduled downtime events
+        host_notification_options       d,u,r,f,s                       ; send notifications for all host states, flapping events, and scheduled downtime events
+        service_notification_commands   notify-service-by-telegram      ; send service notifications
+        host_notification_commands      notify-host-by-telegram         ; send host notifications
         }
 define contactgroup{
         contactgroup_name       admins
         alias                   Nagios Administrators
-        members                 telegramm
+        members                 Telegram Group Chat
 
 ```
 
