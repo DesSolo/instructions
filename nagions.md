@@ -21,6 +21,20 @@ vim /etc/selinex/config
 ```
 >SELINUX=disabled<br/>
 
+# Timezone
+
+```bash
+vim /etc/nagios/nagios.cfg 
+```
+>use_timezone=Europe/Moscow<br/>
+
+```bash
+vim /etc/httpd/conf.d/nagios.conf
+```
+><Directory "/usr/lib64/nagios/cgi-bin/"><br/>
+>   SetEnv TZ "Europe/Moscow"<br/>
+
+
 >http://ip_address/nagios<br/>
 
 disable ip v6
