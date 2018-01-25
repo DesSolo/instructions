@@ -69,6 +69,7 @@ define service{
         host_name                       google.com
         service_description             PING
         check_command                   check_ping!100.0,20%!500.0,60%
+        notification_interval           0
         }
 
 define service{
