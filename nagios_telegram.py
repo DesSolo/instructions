@@ -46,7 +46,7 @@ def host_notification(args):
         args.hostaddress,
         args.hoststate,
         str(args.datetime).replace("+", " "),
-        args.output
+        args.output.decode("utf-8")
     )
 
 
@@ -73,7 +73,7 @@ def service_notification(args):
         args.hostaddress,
         args.servicestate,
         str(args.datetime).replace("+", " "),
-        args.output
+        args.output.decode("utf-8")
     )
 
 
