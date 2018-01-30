@@ -79,7 +79,6 @@ def service_notification(args):
 
 def main():
     args = parse_args()
-    logging.debug(args)
     user_id = int(args.contact)
     if args.object_type == 'host':
         message = host_notification(args)
