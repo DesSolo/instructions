@@ -118,8 +118,8 @@ comp-lzo
 verb 3
 ```
 ```bash
-firewall-cmd --zine=public --add-service openvpn --permanent
-firewall-cmd --zine=public --add-masquerade --permanent
+firewall-cmd --zone=public --add-service openvpn --permanent
+firewall-cmd --zone=public --add-masquerade --permanent
 firewall-cmd --reload
 
 systemctl start openvpn@server.service
