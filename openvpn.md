@@ -121,4 +121,7 @@ verb 3
 firewall-cmd --zine=public --add-service openvpn --permanent
 firewall-cmd --zine=public --add-masquerade --permanent
 firewall-cmd --reload
+
+systemctl start openvpn@server.service
+systemctl enable openvpn@server.service
 ```
