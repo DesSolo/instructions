@@ -1,0 +1,44 @@
+yum install wget nginx mysql-server -y
+
+vim /etc/nginx/nginx.conf
+
+server {
+     listen 80;
+     server_name _;
+ 
+     location / {
+         proxy_pass http://127.0.0.1:3000;
+     }
+ }
+
+setenforce 0
+
+systemcl enable nginx
+systemcl enable mysql-server
+systemcl start nginx
+systemcl start mysql-server
+
+mysql -u root -proot
+
+DROP DATABASE IF EXISTS gogs;
+CREATE DATABASE IF NOT EXISTS gogs CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+
+wget -O /etc/yum.repos.d/gogs.repo https://dl.packager.io/srv/pkgr/gogs/pkgr/installer/el/7.repo
+
+yum install gogs -y
+
+systemcl enable gogs
+systemcl start gogs
+
+
+style
+
+https://github.com/gencer/gitea-gihubify
+cd /opt/gogs/public/css
+wget https://raw.githubusercontent.com/gencer/gitea-gihubify/master/patch-ext.css https://raw.githubusercontent.com/gencer/gitea-gihubify/master/patch.css
+
+HEADER vim gogs.css
+@import url("patch.css");
+@import url("patch-ext.css");
