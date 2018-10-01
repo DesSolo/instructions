@@ -22,9 +22,9 @@ Nginx 4xx
 vim /etc/fail2ban/filter.d/nginx-4xx.conf
 ```
 
->[Definition]<br/>
->failregex = <HOST> - - \[.*\] "(GET|POST|HEAD).*HTTP.* (404|403|400)<br/>
->ignoreregex =<br/>
+[Definition]<br/>
+failregex = ^<HOST>.*"(GET|POST).*" (404|444|403|400) .*$<br/>
+ignoreregex =<br/>
 
 ```bash
 vim /etc/fail2ban/jail.d/00-firewalld.conf
