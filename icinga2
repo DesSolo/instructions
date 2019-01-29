@@ -1,0 +1,70 @@
+yum install epel-release -y
+yum install https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm -y
+yum install icinga2 vim-icinga2 nagios-plugins-all -y
+systemctl enable icinga2
+systemctl start icinga2
+
+yum install postgresql-server postgresql icinga2-ido-pgsql -y
+postgresql-setup initdb
+systemctl enable postgresql.service
+systemctl start postgresql.service
+
+cd /tmp
+sudo -u postgres psql -c "CREATE ROLE icinga WITH LOGIN PASSWORD 'icinga'"
+sudo -u postgres createdb -O icinga -E UTF8 icinga
+
+---
+su postgres
+cd
+vim data/pg_hba.conf
+
+local   icinga      icinga                            md5
+host    icinga      icinga      127.0.0.1/32          md5
+host    icinga      icinga      ::1/128               md5
+---
+
+systemctl restart postgresql
+
+export PGPASSWORD=icinga
+psql -U icinga -d icinga < /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
+vim /etc/icinga2/features-available/ido-pgsql.conf
+
+icinga2 feature enable ido-pgsql
+systemctl restart icinga2
+
+
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd
+
+yum install centos-release-scl -y
+yum -y install icingaweb2 -y
+
+vim /etc/opt/rh/rh-php71/php.ini
+date.timezone = Europe/Moscow
+
+systemctl restart rh-php71-php-fpm
+systemctl restart httpd
+
+
+cd /tmp
+sudo -u postgres psql -c "CREATE ROLE icingaweb2 WITH LOGIN PASSWORD 'icingaweb2'";
+sudo -u postgres createdb -O icingaweb2 -E UTF8 icingaweb2
+
+---
+su postgres
+cd
+vim data/pg_hba.conf
+
+local   icingaweb2      icingaweb2                            md5
+host    icingaweb2      icingaweb2      127.0.0.1/32          md5
+host    icingaweb2      icingaweb2      ::1/128               md5
+---
+
+icinga2 api setup
+vim /etc/icinga2/conf.d/api-users.conf
+
+icinga2 feature enable api
+systemctl restart icinga2.service
+
+icingacli setup token create
