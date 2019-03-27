@@ -1,0 +1,30 @@
+nserver 8.8.8.8
+nserver 8.8.4.4
+
+nscache 65536
+timeouts 1 5 30 60 180 1800 15 60
+
+radius testing123 127.0.0.1
+authcache ip,user,password 86400
+
+daemon
+log /var/log/3proxy/3proxy.log D
+logformat "- %y/%m/%d|%H:%M.%S %N.%p %E %U %C:%c %R:%r %O %I %h %T"
+
+archiver gz /bin/gzip %F
+rotate 30
+
+#auth cache radius
+#dnspr
+
+auth cache radius
+nsrecord imbolc.name spaces.ru
+#deny * * vk.com
+allow * * * 80-88,8080-8088 HTTP
+allow * * * 443,8443 HTTPS
+proxy -a
+
+flush
+auth cache radius
+maxconn 1000
+socks -p443
