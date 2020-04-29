@@ -1,47 +1,47 @@
-# Fail2Ban
-```bash
+Fail2Ban
+=====
+### Install
+```shell script
 yum install fail2ban -y
 vim /etc/fail2ban/jail.d/00-firewalld.conf
 ```
+```
+[DEFAULT]
+banaction = firewallcmd-ipset
+bantime = 3600
+sender = fail2ban
+destemail = root
 
-
->[DEFAULT]<br/>
->banaction = firewallcmd-ipset<br/>
->bantime = 3600<br/>
->sender = fail2ban<br/>
->destemail = root<br/>
-><br/>
->[sshd]<br/>
->enabled = true<br/>
->port = ssh,80,443<br/>
->maxentry = 3<br/>
->findtime = 600<br/>
-
-Nginx 4xx
-```bash
+[sshd]
+enabled = true
+port = ssh,80,443
+maxentry = 3
+findtime = 600
+```
+### Nginx 4xx
+```shell script
 vim /etc/fail2ban/filter.d/nginx-4xx.conf
 ```
-
-[Definition]<br/>
-failregex = ^<HOST>.*"(GET|POST).*" (404|444|403|400) .*$<br/>
-ignoreregex =<br/>
-
-```bash
+```
+[Definition]
+failregex = ^<HOST>.*"(GET|POST).*" (404|444|403|400) .*$
+ignoreregex =
+```
+```shell script
 vim /etc/fail2ban/jail.d/00-firewalld.conf
 ```
+```
+[nginx-4xx]
+enabled = true
+port = 80,443
+logpath  = /var/log/nginx/access.log
+maxentry = 10
+findtime = 600
 
->[nginx-4xx]<br/>
->enabled = true<br/>
->port = 80,443<br/>
->logpath  = /var/log/nginx/access.log<br/>
->maxentry = 10<br/>
->findtime = 600<br/>
-
->[recidive]<br/>
->enabled = true<br/>
->port = 80,443<br/>
->maxentry = 3<br/>
->findtime = 86400<br/>
->bantime = 604800<br/>
-
-
+[recidive]
+enabled = true
+port = 80,443
+maxentry = 3
+findtime = 86400
+bantime = 604800
+```

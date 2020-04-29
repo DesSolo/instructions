@@ -1,5 +1,6 @@
-# Nagios
-```bash
+Nagios
+=====
+```shell script
 yum install epel-release -y
 yum install nagios -y
 yum install nagios-plugins-all -y
@@ -11,51 +12,52 @@ firewall-cmd --zone=public --add-port=80/tcp --permanent
 firewall-cmd --reload
 ```
 
-reset password
-```bash
+### reset password
+```shell script
 htpasswd -c /etc/nagios/passwd nagiosadmin
 ```
-disable selinux
-```bash
+### disable selinux
+```shell script
 vim /etc/selinex/config
 ```
->SELINUX=disabled<br/>
+```
+SELINUX=disabled
+```
 
-# Timezone
+### Timezone
 
-```bash
+```shell script
 vim /etc/nagios/nagios.cfg 
 ```
->use_timezone=Europe/Moscow<br/>
+use_timezone=Europe/Moscow
 
-```bash
+```shell script
 vim /etc/httpd/conf.d/nagios.conf
 ```
-><Directory "/usr/lib64/nagios/cgi-bin/"><br/>
->   SetEnv TZ "Europe/Moscow"<br/>
+```
+Directory "/usr/lib64/nagios/cgi-bin/">
+   SetEnv TZ "Europe/Moscow"
+```
+http://ip_address/nagios
 
-
->http://ip_address/nagios<br/>
-
-disable ip v6
-```bash
+### disable ip v6
+```shell script
 vim /etc/nagios/objects/commands.cfg
 ```
-
-```xml
+```
 # 'check-host-alive' command definition
 define command{
         command_name    check-host-alive
         command_line    $USER1$/check_ping -4 -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
         }
 ```
-# Example cfg server
+### Example cfg server
 
-```bash
+```shell script
 vim /etc/nagios/objects/google.cfg
 ```
 
-```xml
+```
 define host{
         use                     linux-server
         host_name               google.com
@@ -80,22 +82,23 @@ define service{
         notifications_enabled           0
         }
 ```
-```bash
+```shell script
 vim /etc/nagios/nagios.cfg 
 ```
+```
+cfg_file=/etc/nagios/objects/google.cfg
+```
 
->cfg_file=/etc/nagios/objects/google.cfg<br/>
-
-# Telegramm
+### Telegram notify
 https://github.com/dariomas/nagios_telegram/wiki/Nagios-notifications-via-Telegram
-```bash
+```shell script
 wget -O /usr/local/bin/nagios_telegram.py https://raw.githubusercontent.com/DesSolo/plex/master/nagios_telegram.py
 chmod 755 /usr/local/bin/nagios_telegram.py
 yum install python2-pip -y
 pip2.7 install twx
 vim /etc/nagios/objects/commands.cfg
 ```
-```xml
+```
 # commands to send host/service notifications
 define command {
         command_name     notify-host-by-telegram
@@ -107,10 +110,10 @@ define command {
         command_line     /usr/local/bin/nagios_telegram.py --token TOKEN --object_type service --contact "$CONTACTPAGER$" --notificationtype "$NOTIFICATIONTYPE$" --servicestate "$SERVICESTATE$" --hostname "$HOSTNAME$" --hostaddress "$HOSTADDRESS$" --datetime "$LONGDATETIME$" --output "$SERVICEOUTPUT$" --servicedesc "$SERVICEDESC$" --servicename "$SERVICENAME$"
 }
 ```
-```bash
+```shell script
 vim /etc/nagios/objects/contacts.cfg
 ```
-```xml
+```
 define contact{
         contact_name                    Telegram Group Chat
         pager                           -228700585                      ; The name of this contact template
@@ -127,4 +130,3 @@ define contactgroup{
         members                 Telegram Group Chat
 
 ```
-
