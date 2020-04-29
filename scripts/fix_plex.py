@@ -7,7 +7,9 @@ from shutil import copy2
 class FixPlex(object):
     def __init__(self):
         self.re_main = compile('^main-.+[.]js$')
-        self.name = self.search('/usr/lib/plexmediaserver/Resources/Plug-ins-f54242b6b/WebClient.bundle/Contents/Resources/js')
+        self.name = self.search(
+            '/usr/lib/plexmediaserver/Resources/Plug-ins-f54242b6b/WebClient.bundle/Contents/Resources/js'
+        )
         if self.name:
             self.backup()
             self.fix_plex()
@@ -36,4 +38,5 @@ class FixPlex(object):
         print('Backup created ' + name_backup)
 
 
-FixPlex()
+if __name__ == '__main__':
+    FixPlex()

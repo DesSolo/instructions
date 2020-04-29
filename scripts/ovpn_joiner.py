@@ -50,6 +50,6 @@ class JoinVPNCrt(object):
         else:
             print 'Error'
 
-
-joiner = JoinVPNCrt(argv[-1])
-joiner.join_cert()
+if __name__ == '__main__':
+    joiner = JoinVPNCrt(argv[-1])
+    joiner.join_cert()

@@ -1,5 +1,6 @@
-# OenVPN server
-```bash
+OenVPN server
+=====
+```shell script
 yum install epel-release -y
 yum install openvpn easy-rsa -y
 
@@ -28,7 +29,7 @@ cp ./pki/issued/user.crt /etc/openvpn/
 
 vim /etc/openvpn/server.conf
 ```
-```xml
+```
 local {ip addr}
 port 1194
  
@@ -71,7 +72,7 @@ verb 3
 explicit-exit-notify 1
 ```
 
-```xml
+```
 client
 dev tun
 dev-type tun
@@ -117,7 +118,7 @@ cipher AES-256-CBC
 comp-lzo
 verb 3
 ```
-```bash
+```shell script
 firewall-cmd --zone=public --add-service openvpn --permanent
 firewall-cmd --zone=public --add-masquerade --permanent
 firewall-cmd --reload

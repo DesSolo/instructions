@@ -1,5 +1,6 @@
-# Plex install Centos 7
-```bash
+Plex install Centos 7
+=====
+```shell script
 yum update && sudo yum install wget
 wget https://downloads.plex.tv/plex-media-server/1.10.1.4602-f54242b6b/plexmediaserver-1.10.1.4602-f54242b6b.x86_64.rpm
 yum install plexmediaserver*.rpm
@@ -7,14 +8,14 @@ systemctl enable plexmediaserver.service
 systemctl start plexmediaserver.service
 ```
 
-# Fix
-```bash
+### Fix
+```shell script
 wget https://raw.githubusercontent.com/DesSolo/plex/master/PycharmProjects/plex_fix/fix.py
 chmod +x fix.py
 ./fix.py
 ```
-# Open ports firewall
-```bash
+### Open ports firewall
+```shell script
 vim /usr/lib/firewalld/services/plexmediaserver.xml
 ```
 ```xml
@@ -31,11 +32,11 @@ vim /usr/lib/firewalld/services/plexmediaserver.xml
   <port protocol="udp" port="32414"/>
 </service>
 ```
-```bash
+```shell script
 firewall-cmd --permanent --zone=public --add-service=plexmediaserver
 ```
-# Transmission
-```bash
+### Transmission
+```shell script
 yum install epel-release
 yum -y update
 yum install transmission-daemon
@@ -43,9 +44,9 @@ systemctl start transmission-daemon.service
 systemctl stop transmission-daemon.service
 vim /var/lib/transmission/.config/transmission-daemon/settings.json
 ```
-```xml
+```
 "rpc-whitelist-enabled": false,
 ```
-```bash
+```shell script
 systemctl start transmission-daemon.service
 ```

@@ -1,1 +1,1 @@
-# Instructions for Centos 7
+# Instructions draft
